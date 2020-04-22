@@ -1,0 +1,33 @@
+const express = require("express")
+const genresRouter = require("../routes/genres")
+const homeRouter = require("../routes/home")
+const customersRouter = require("../routes/customers")
+const moviesRouter = require("../routes/movies")
+const rentalsRouter = require("../routes/rentals")
+const usersRouter = require("../routes/users")
+const loginsRouter = require("../routes/logins")
+const error = require("../middleware/error")
+const helmet = require('helmet')
+const morgan = require('morgan')
+const startupDebug = require('debug')("app:startup")
+const dbDebug = require('debug')("app:db")
+const config = require("config")
+module.exports = function(app) {
+    app.use(express.json())
+    app.use(express.urlencoded({extended: true}))
+    app.use(helmet())
+
+    app.use("/", homeRouter)
+    app.use("/api/genres", genresRouter)
+    app.use("/api/customers", customersRouter)
+    app.use("/api/movies", moviesRouter)
+    app.use("/api/rentals", rentalsRouter)
+    app.use("/api/users", usersRouter)
+    app.use("/api/logins", loginsRouter)
+    app.use(error)
+
+    app.get('env') === 'development' && app.use(morgan('tiny')) 
+
+startupDebug("Middleware initialized")
+dbDebug(config.get("database-pw"))
+}

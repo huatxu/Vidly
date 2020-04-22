@@ -1,0 +1,4 @@
+{
+    "database-pw":"vidly_password",
+    "jwt-private-key":"vidly_jwtprivatekey"
+}
